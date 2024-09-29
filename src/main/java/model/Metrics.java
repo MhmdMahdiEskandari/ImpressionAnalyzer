@@ -5,6 +5,15 @@ public class Metrics {
     public int clicks = 0;
     public double revenue = 0.0;
 
+    public Metrics(int impressions, int clicks, double revenue) {
+        this.impressions = impressions;
+        this.clicks = clicks;
+        this.revenue = revenue;
+    }
+
+    public Metrics() {
+    }
+
     public int getImpressions() {
         return impressions;
     }
