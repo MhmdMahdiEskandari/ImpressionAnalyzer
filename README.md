@@ -20,6 +20,8 @@ Prerequisites
 
 Set Up the Database: Execute the **ad_metrics_db.sql** SQL dump to create the necessary tables in your MySQL database
 
+Run **AdMetrics** java file to get results.
+
 **Output**
 
 
