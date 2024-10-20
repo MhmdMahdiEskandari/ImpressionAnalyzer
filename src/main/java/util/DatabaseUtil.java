@@ -17,61 +17,6 @@ public class DatabaseUtil {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
-    public void insertOrUpdateImpression(Impression impression) {
-        String selectSql = "SELECT COUNT(*) FROM impressions WHERE id = ?";
-        String insertSql = "INSERT INTO impressions (id, app_id, country_code, advertiser_id) VALUES (?, ?, ?, ?)";
-        String updateSql = "UPDATE impressions SET app_id = ?, country_code = ?, advertiser_id = ? WHERE id = ?";
-
-        try (Connection conn = DatabaseUtil.getConnection()) {
-            try (PreparedStatement selectStmt = conn.prepareStatement(selectSql)) {
-                selectStmt.setString(1, impression.id);
-                ResultSet rs = selectStmt.executeQuery();
-                if (rs.next() && rs.getInt(1) > 0 && impression.id != null) {
-                    try (PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
-                        updateStmt.setInt(1, impression.app_id);
-                        updateStmt.setString(2, impression.country_code);
-                        updateStmt.setInt(3, impression.advertiser_id);
-                        updateStmt.setString(4, impression.id);
-                        updateStmt.executeUpdate();
-                    }
-                } else {
-                    try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
-                        insertStmt.setString(1, impression.id);
-                        insertStmt.setInt(2, impression.app_id);
-                        insertStmt.setString(3, impression.country_code);
-                        insertStmt.setInt(4, impression.advertiser_id);
-                        insertStmt.executeUpdate();
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void insertClick(Click click) {
-        String selectSql = "SELECT COUNT(*) FROM clicks WHERE impression_id = ? AND revenue = ?";
-        String insertSql = "INSERT INTO clicks (impression_id, revenue) VALUES (?, ?)";
-
-        try (Connection conn = DatabaseUtil.getConnection()) {
-            try (PreparedStatement selectStmt = conn.prepareStatement(selectSql)) {
-                selectStmt.setString(1, click.impression_id);
-                selectStmt.setDouble(2, click.revenue);
-                ResultSet rs = selectStmt.executeQuery();
-                if (rs.next() && rs.getInt(1) == 0) {
-                    try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
-                        insertStmt.setString(1, click.impression_id);
-                        insertStmt.setDouble(2, click.revenue);
-                        insertStmt.executeUpdate();
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
     public static List<MetricsOutput> getMetrics() {
         String sql = "SELECT app_id, country_code, COUNT(*) as impressions, " +
                 "SUM(CASE WHEN clicks.impression_id IS NOT NULL THEN 1 ELSE 0 END) as clicks, " +
@@ -173,6 +118,60 @@ public class DatabaseUtil {
                 pstmt.addBatch();
             }
             pstmt.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void insertOrUpdateImpression(Impression impression) {
+        String selectSql = "SELECT COUNT(*) FROM impressions WHERE id = ?";
+        String insertSql = "INSERT INTO impressions (id, app_id, country_code, advertiser_id) VALUES (?, ?, ?, ?)";
+        String updateSql = "UPDATE impressions SET app_id = ?, country_code = ?, advertiser_id = ? WHERE id = ?";
+
+        try (Connection conn = DatabaseUtil.getConnection()) {
+            try (PreparedStatement selectStmt = conn.prepareStatement(selectSql)) {
+                selectStmt.setString(1, impression.id);
+                ResultSet rs = selectStmt.executeQuery();
+                if (rs.next() && rs.getInt(1) > 0 && impression.id != null) {
+                    try (PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
+                        updateStmt.setInt(1, impression.app_id);
+                        updateStmt.setString(2, impression.country_code);
+                        updateStmt.setInt(3, impression.advertiser_id);
+                        updateStmt.setString(4, impression.id);
+                        updateStmt.executeUpdate();
+                    }
+                } else {
+                    try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
+                        insertStmt.setString(1, impression.id);
+                        insertStmt.setInt(2, impression.app_id);
+                        insertStmt.setString(3, impression.country_code);
+                        insertStmt.setInt(4, impression.advertiser_id);
+                        insertStmt.executeUpdate();
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void insertClick(Click click) {
+        String selectSql = "SELECT COUNT(*) FROM clicks WHERE impression_id = ? AND revenue = ?";
+        String insertSql = "INSERT INTO clicks (impression_id, revenue) VALUES (?, ?)";
+
+        try (Connection conn = DatabaseUtil.getConnection()) {
+            try (PreparedStatement selectStmt = conn.prepareStatement(selectSql)) {
+                selectStmt.setString(1, click.impression_id);
+                selectStmt.setDouble(2, click.revenue);
+                ResultSet rs = selectStmt.executeQuery();
+                if (rs.next() && rs.getInt(1) == 0) {
+                    try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
+                        insertStmt.setString(1, click.impression_id);
+                        insertStmt.setDouble(2, click.revenue);
+                        insertStmt.executeUpdate();
+                    }
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

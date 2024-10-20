@@ -13,12 +13,12 @@ public class Advertiser {
         return id;
     }
 
-    public double getRevenuePerImpression() {
-        return revenuePerImpression;
-    }
-
     public void setId(int id) {
         this.id = id;
+    }
+
+    public double getRevenuePerImpression() {
+        return revenuePerImpression;
     }
 
     public void setRevenuePerImpression(double revenuePerImpression) {
