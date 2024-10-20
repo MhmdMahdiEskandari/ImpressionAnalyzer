@@ -1,19 +1,3 @@
-/*
- Navicat Premium Data Transfer
-
- Source Server         : ad_metrics_db
- Source Server Type    : MySQL
- Source Server Version : 101107
- Source Host           : localhost:3306
- Source Schema         : ad_metrics_db
-
- Target Server Type    : MySQL
- Target Server Version : 101107
- File Encoding         : 65001
-
- Date: 29/09/2024 14:05:35
-*/
-
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
